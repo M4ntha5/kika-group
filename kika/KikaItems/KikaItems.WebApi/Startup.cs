@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KikaItems.BusinessLogic;
+using KikaItems.BusinessLogic.Repositories;
+using KikaItems.BusinessLogic.Services;
 using KikaItems.Contracts;
+using KikaItems.Contracts.Interfaces.Repositories;
+using KikaItems.Contracts.Interfaces.Services;
 using KikaItems.Contracts.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,7 +39,14 @@ namespace Kika.WebApi
             //read appsettings.json file
             Configurations.ReadAppSettingFile();
 
+            services
+                .AddScoped<IItemRepository, ItemRepository>()
+                .AddScoped<IPriceRepository, PriceRepository>()
 
+                .AddScoped<IItemService, ItemService>()
+                .AddScoped<IPriceService, PriceService>()
+                
+                .AddScoped<KikaDatabaseContext>();
 
             services.AddDbContext<KikaDatabaseContext>(options =>
                     options.UseSqlServer(Settings.ConnectionString));
