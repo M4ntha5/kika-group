@@ -34,14 +34,14 @@ namespace KikaItems.BusinessLogic.Services
             return _priceRepository.GetAllItemPrices(sku);
         }
 
-        public Task UpdateSelectedPrice(int priceId, InsertPrice updatedItem)
+        public Task UpdateSelectedPrice(string sku, int priceId, InsertPrice updatedItem)
         {
-            return _priceRepository.UpdateSelectedPrice(priceId, updatedItem);
+            return _priceRepository.UpdateSelectedPrice(sku, priceId, updatedItem);
         }
 
-        public Task UpdateSelectedPriceState(int priceId, bool state)
+        public Task UpdateSelectedPriceState(string sku, int priceId, bool state)
         {
-            return _priceRepository.ChangeActiveState(priceId, state);
+            return _priceRepository.ChangeActiveState(sku, priceId, state);
         }
 
     }

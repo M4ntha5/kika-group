@@ -27,7 +27,7 @@ namespace KikaItems.BusinessLogic.Repositories
             var entity = new PriceEntity
             {
                 Active = price.Active,
-                ItemSku = sku,
+                ItemSku = sku.ToUpper(),
                 Price = price.Price
             };
 
@@ -36,26 +36,30 @@ namespace KikaItems.BusinessLogic.Repositories
 
         public Task<List<PriceEntity>> GetAllItemPrices(string sku)
         {
-            return _context.Prices.Where(x => x.ItemSku == sku).ToListAsync();
+            return _context.Prices.Where(x => x.ItemSku.ToUpper() == sku.ToUpper()).ToListAsync();
         }
 
-        public async Task UpdateSelectedPrice(int priceId, InsertPrice updatedItem)
+        public async Task UpdateSelectedPrice(string sku, int priceId, InsertPrice updatedItem)
         {
             var entity = await _context.Prices.FindAsync(priceId);
 
             if (entity == null)
                 throw new Exception("Price you are trying to update does not exist");
+            if (sku.ToUpper() != entity.ItemSku.ToUpper())
+                throw new Exception("Sku you are trying to update does not exist");
 
             entity.Active = updatedItem.Active;
             entity.Price = updatedItem.Price;
         }
 
-        public async Task ChangeActiveState(int priceId, bool activeState)
+        public async Task ChangeActiveState(string sku, int priceId, bool activeState)
         {
             var entity = await _context.Prices.FindAsync(priceId);
 
             if (entity == null)
                 throw new Exception("Price you are trying to update does not exist");
+            if (sku.ToUpper() != entity.ItemSku.ToUpper())
+                throw new Exception("Sku you are trying to update does not exist");
 
             entity.Active = activeState;
         }

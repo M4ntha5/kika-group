@@ -11,7 +11,7 @@ namespace KikaItems.Contracts.Interfaces.Services
     {
         Task InsertPrice(string sku, InsertPrice price);
         Task<List<PriceEntity>> GetAllItemPrices(string sku);
-        Task UpdateSelectedPrice(int priceId, InsertPrice updatedItem);
-        Task UpdateSelectedPriceState(int priceId, bool state);
+        Task UpdateSelectedPrice(string sku, int priceId, InsertPrice updatedItem);
+        Task UpdateSelectedPriceState(string sku, int priceId, bool state);
     }
 }

@@ -28,7 +28,7 @@ namespace KikaItems.BusinessLogic.Repositories
             {
                 Name = item.Name,
                 Ean = item.Ean,
-                Sku = item.Sku,
+                Sku = item.Sku.ToUpper(),
                 UnitOfMeasureId = item.UnitOfMeasureId
             };
 
@@ -45,7 +45,7 @@ namespace KikaItems.BusinessLogic.Repositories
                       {
                           Name = item.Name,
                           Ean = item.Ean,
-                          Sku = item.Sku,
+                          Sku = item.Sku.ToUpper(),
                           UnitOfMeasureName = unit.Name
                       })
                 .ToListAsync();
@@ -53,7 +53,7 @@ namespace KikaItems.BusinessLogic.Repositories
 
         public async Task UpdateSelectedItem(string sku, UpdateItem updatedItem)
         {
-            var entity = await _context.Items.Where(x => x.Sku == sku).FirstOrDefaultAsync();
+            var entity = await _context.Items.Where(x => x.Sku.ToUpper() == sku.ToUpper()).FirstOrDefaultAsync();
 
             if(entity == null)
                 throw new Exception("Item you are trying to update does not exist");
@@ -66,7 +66,7 @@ namespace KikaItems.BusinessLogic.Repositories
         public Task<Item> GetItemBySku(string sku)
         {
             return _context.Items
-                .Where(x => x.Sku == sku)
+                .Where(x => x.Sku.ToUpper() == sku.ToUpper())
                 .Join(_context.UnitsOfMeasure, 
                       item => item.UnitOfMeasureId,
                       unit => unit.Id,
@@ -74,7 +74,7 @@ namespace KikaItems.BusinessLogic.Repositories
                       {
                           Name = item.Name,
                           Ean = item.Ean,
-                          Sku = item.Sku,
+                          Sku = item.Sku.ToUpper(),
                           UnitOfMeasureName = unit.Name
                       })
                 .FirstOrDefaultAsync();
@@ -82,7 +82,7 @@ namespace KikaItems.BusinessLogic.Repositories
 
         public async Task DeleteSelectedItem(string sku)
         {
-            var entity = await _context.Items.Where(x => x.Sku == sku).FirstOrDefaultAsync();
+            var entity = await _context.Items.Where(x => x.Sku.ToUpper() == sku.ToUpper()).FirstOrDefaultAsync();
             if (entity == null)
                 throw new Exception("Item you are trying to delete does not exist");
 
