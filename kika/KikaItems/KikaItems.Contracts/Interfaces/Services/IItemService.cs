@@ -9,7 +9,7 @@ namespace KikaItems.Contracts.Interfaces.Services
 {
     public interface IItemService
     {
-        Task InsertItem(ItemEntity item);
+        Task InsertItem(UpdateItem item);
         Task<List<Item>> GetAllItems();
         Task<Item> GetSelectedItem(string sku);
         Task UpdateSelectedItem(string sku, UpdateItem item);

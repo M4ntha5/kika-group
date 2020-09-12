@@ -37,10 +37,23 @@ namespace KikaItems.WebApi.Controllers
             return Ok(prices);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post(string sku, [Required, FromForm] InsertPrice insertPrice)
+        [HttpGet("{priceId}")]
+        public async Task<IActionResult> Get(string sku, int priceId)
         {
-            if (insertPrice == null || insertPrice.Price < 1 || string.IsNullOrEmpty(sku))
+            if (string.IsNullOrEmpty(sku))
+                throw new Exception("Sku no defined");
+
+            var price = await _priceService.GetSelectedPrice(sku, priceId);
+            if (price == null)
+                throw new Exception("Such price does not exist");
+
+            return Ok(price);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(string sku, [Required, FromBody] InsertPrice insertPrice)
+        {
+            if (insertPrice == null || decimal.Parse(insertPrice.Price) < 1 || string.IsNullOrEmpty(sku))
                 throw new Exception("Invalid information entered");
 
             await _priceService.InsertPrice(sku, insertPrice);
@@ -49,23 +62,23 @@ namespace KikaItems.WebApi.Controllers
         }
 
         [HttpPut("{priceId}")]
-        public async Task<IActionResult> Update(string sku, int priceId, [Required, FromForm] InsertPrice insertPrice)
+        public async Task<IActionResult> Update(string sku, int priceId, [FromBody] InsertPrice insertPrice)
         {
-            if (insertPrice == null || insertPrice.Price < 1 || priceId < 1 || string.IsNullOrEmpty(sku))
+            if (insertPrice == null || decimal.Parse(insertPrice.Price) < 1 || priceId < 1 || string.IsNullOrEmpty(sku))
                 throw new Exception("Invalid information entered");
-
+    
             await _priceService.UpdateSelectedPrice(sku, priceId, insertPrice);
             await _context.SaveChangesAsync();
             return Ok();
         }
 
-        [HttpPut("{priceId}/state")]
-        public async Task<IActionResult> Update(string sku, int priceId, [Required, FromForm] bool activeState)
+        [HttpGet("{priceId}/state")]
+        public async Task<IActionResult> ChangeActiveState(string sku, int priceId)
         {
             if (priceId < 1 || string.IsNullOrEmpty(sku))
                 throw new Exception("Invalid information entered");
 
-            await _priceService.UpdateSelectedPriceState(sku, priceId, activeState);
+            await _priceService.UpdateSelectedPriceState(sku, priceId);
             await _context.SaveChangesAsync();
             return Ok();
         }

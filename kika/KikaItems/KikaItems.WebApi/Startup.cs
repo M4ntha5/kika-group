@@ -42,6 +42,7 @@ namespace Kika.WebApi
             services
                 .AddScoped<IItemRepository, ItemRepository>()
                 .AddScoped<IPriceRepository, PriceRepository>()
+                .AddScoped<IUnitOfMeasureRepository, UnitOfMeasureRepository>()
 
                 .AddScoped<IItemService, ItemService>()
                 .AddScoped<IPriceService, PriceService>()

@@ -47,7 +47,7 @@ namespace KikaItems.WebApi.Controllers
         }
 
         [HttpPost()]
-        public async Task<IActionResult> Post([Required, FromForm] ItemEntity newItem)
+        public async Task<IActionResult> Post([Required, FromBody] UpdateItem newItem)
         {
             if (newItem == null || string.IsNullOrEmpty(newItem.Ean) || string.IsNullOrEmpty(newItem.Sku)
                 || string.IsNullOrEmpty(newItem.Name))
@@ -60,7 +60,7 @@ namespace KikaItems.WebApi.Controllers
         }
 
         [HttpPut("{sku}")]
-        public async Task<IActionResult> Update([Required] string sku, [Required, FromForm] UpdateItem updatedItem)
+        public async Task<IActionResult> Update([Required] string sku, [Required, FromBody] UpdateItem updatedItem)
         {
             if (updatedItem == null || string.IsNullOrEmpty(updatedItem.Ean) ||
                 string.IsNullOrEmpty(updatedItem.Name) || string.IsNullOrEmpty(sku))

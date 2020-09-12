@@ -39,9 +39,24 @@ namespace KikaItems.BusinessLogic.Services
             return _priceRepository.UpdateSelectedPrice(sku, priceId, updatedItem);
         }
 
-        public Task UpdateSelectedPriceState(string sku, int priceId, bool state)
+        public Task UpdateSelectedPriceState(string sku, int priceId)
         {
-            return _priceRepository.ChangeActiveState(sku, priceId, state);
+            return _priceRepository.ChangeActiveState(sku, priceId);
+        }
+
+        public async Task<InsertPrice> GetSelectedPrice(string sku, int priceId)
+        {
+            if (string.IsNullOrEmpty(sku) || priceId < 1)
+                throw new Exception("Invalid data");
+
+            var price = await _priceRepository.GetSelectedPrice(sku, priceId);
+
+            var model = new InsertPrice()
+            {
+                Active = price.Active,
+                Price = price.Price.ToString()
+            };
+            return model;
         }
 
     }

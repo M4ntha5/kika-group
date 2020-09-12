@@ -6,7 +6,7 @@ namespace KikaItems.Contracts.Models
 {
     public class InsertPrice
     {
-        public decimal Price { get; set; }
+        public string Price { get; set; }
         public bool Active { get; set; }
     }
 }

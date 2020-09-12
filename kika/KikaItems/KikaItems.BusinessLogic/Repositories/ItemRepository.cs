@@ -19,17 +19,22 @@ namespace KikaItems.BusinessLogic.Repositories
             _context = context;
         }
 
-        public async Task InsertItem(ItemEntity item)
+        public async Task InsertItem(UpdateItem item)
         {
             if (string.IsNullOrEmpty(item.Ean) || string.IsNullOrEmpty(item.Name) || string.IsNullOrEmpty(item.Sku))
                 throw new Exception("Cannot add item, because name, ean or sku is not defined");
+
+            var unitEntity = await _context.UnitsOfMeasure
+                .Where(x => x.Name == item.UnitOfMeasure).FirstOrDefaultAsync();
+            if (unitEntity == null)
+                throw new Exception("Such unit of measure does not exist");
 
             var entity = new ItemEntity
             {
                 Name = item.Name,
                 Ean = item.Ean,
                 Sku = item.Sku.ToUpper(),
-                UnitOfMeasureId = item.UnitOfMeasureId
+                UnitOfMeasureId = unitEntity.Id
             };
 
             await _context.Items.AddAsync(entity);
@@ -46,7 +51,7 @@ namespace KikaItems.BusinessLogic.Repositories
                           Name = item.Name,
                           Ean = item.Ean,
                           Sku = item.Sku.ToUpper(),
-                          UnitOfMeasureName = unit.Name
+                          UnitOfMeasure = unit.Name
                       })
                 .ToListAsync();
         }
@@ -58,9 +63,14 @@ namespace KikaItems.BusinessLogic.Repositories
             if(entity == null)
                 throw new Exception("Item you are trying to update does not exist");
 
+            var unitEntity = await _context.UnitsOfMeasure
+                .Where(x => x.Name == updatedItem.UnitOfMeasure).FirstOrDefaultAsync();
+            if (unitEntity == null)
+                throw new Exception("Unit of measure not defined");
+
             entity.Name = updatedItem.Name;
             entity.Ean = updatedItem.Ean;
-            entity.UnitOfMeasureId = updatedItem.UnitOfMeasureId;
+            entity.UnitOfMeasureId = unitEntity.Id;
         }
 
         public Task<Item> GetItemBySku(string sku)
@@ -75,7 +85,7 @@ namespace KikaItems.BusinessLogic.Repositories
                           Name = item.Name,
                           Ean = item.Ean,
                           Sku = item.Sku.ToUpper(),
-                          UnitOfMeasureName = unit.Name
+                          UnitOfMeasure = unit.Name
                       })
                 .FirstOrDefaultAsync();
         }

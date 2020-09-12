@@ -7,7 +7,7 @@ namespace KikaItems.Contracts.Interfaces.Repositories
 {
     public interface IItemRepository
     {
-        Task InsertItem(ItemEntity item);
+        Task InsertItem(UpdateItem item);
         Task<List<Item>> GetAllItems();
         Task UpdateSelectedItem(string sku, UpdateItem updatedItem);
         Task<Item> GetItemBySku(string sku);

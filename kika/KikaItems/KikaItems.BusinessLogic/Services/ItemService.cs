@@ -20,7 +20,7 @@ namespace KikaItems.BusinessLogic.Services
             _itemRepository = itemRepository;
         }
 
-        public async Task InsertItem(ItemEntity item)
+        public async Task InsertItem(UpdateItem item)
         {
             if (item == null)
                 throw new Exception("Cannot add item, because item is not defined");
